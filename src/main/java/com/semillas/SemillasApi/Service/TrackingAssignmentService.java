@@ -4,6 +4,7 @@ import com.semillas.SemillasApi.DTO.Format.*;
 import com.semillas.SemillasApi.Entities.Seeds.Contributor;
 import com.semillas.SemillasApi.Entities.SeedsTracking.TrackingAssignment;
 import com.semillas.SemillasApi.Enums.ColorCode;
+import com.semillas.SemillasApi.Enums.ContributionType;
 import com.semillas.SemillasApi.Enums.ContributorState;
 import com.semillas.SemillasApi.Repository.ContributorRepository;
 import com.semillas.SemillasApi.Repository.TrackingAssignmentRepository;
@@ -68,6 +69,18 @@ public class TrackingAssignmentService {
                     )
             ));
             cells.add(new Cell(
+                    new CellHeader("Correo",0,"String",true,null),
+                    new CellProperty(null,false,null,null),
+                    new ArrayList<CellContent>(
+                            Arrays.asList(
+                                    new CellContent("text",
+                                            null,null,false,
+                                            null,null, contributor.getUser().getEmail(),
+                                            null)
+                            )
+                    )
+            ));
+            cells.add(new Cell(
                     new CellHeader("Responsable Registro",0,"String",true,null),
                     new CellProperty(null,false,null,null),
                     new ArrayList<CellContent>(
@@ -84,9 +97,12 @@ public class TrackingAssignmentService {
                     new CellProperty(null,false,null,null),
                     new ArrayList<CellContent>(
                             Arrays.asList(
-                                    new CellContent("text",
-                                            null,null,false,
-                                            null,null, contributor.getContributionConfig().getContributionType().toString(),
+                                    new CellContent("chipContent",
+                                            null,
+                                            contributor.getContributionConfig().getContributionType().equals(ContributionType.APORTE_CONSTANTE)
+                                                    ? ColorCode.CONSTANT_CONTRIBUTION.value : ColorCode.UNIQUE_CONTRIBUTION.value, false,
+                                            null,null,
+                                            contributor.getContributionConfig().getContributionType().toString(),
                                             null)
                             )
                     )
@@ -97,7 +113,7 @@ public class TrackingAssignmentService {
                     new ArrayList<CellContent>(
                             Arrays.asList(
                                     new CellContent("iconAccion",
-                                            "library_books", ColorCode.EDIT.value, true,
+                                            "library_books", ColorCode.VIEW_TRACKING_SEEDS.value, true,
                                             "Donations","Seguimiento de aportes", null,
                                             new ArrayList<CellParam>(Arrays.asList(
                                                     new CellParam("contributorId",contributor.getContributor_id().toString())

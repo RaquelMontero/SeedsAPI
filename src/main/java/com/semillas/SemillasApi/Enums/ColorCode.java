@@ -18,7 +18,10 @@ public enum ColorCode {
     REJECT_CONTR("#db504a"),
     VIEW_CONTR("#ffe599"),
     VIEW_ASSIGNED_SEEDS("#88cc77"),
-    ASSIGN_SEED("#dead22");
+    ASSIGN_SEED("#dead22"),
+    VIEW_TRACKING_SEEDS("#665916"),
+    UNIQUE_CONTRIBUTION("#4f6485"),
+    CONSTANT_CONTRIBUTION("#325132");
     public String value;
     private ColorCode(String value){
         this.value=value;

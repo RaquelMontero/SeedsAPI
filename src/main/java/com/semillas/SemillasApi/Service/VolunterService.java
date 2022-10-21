@@ -16,6 +16,7 @@ import com.semillas.SemillasApi.Repository.VolunterRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -49,6 +50,7 @@ public class VolunterService {
     private Table getVoluntersInformat(List<Volunter> volunters, Boolean isTracking){
         List<TableRow> resultList = new ArrayList<TableRow>();
         int index=1;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         for (Volunter volunter: volunters){
             List<Cell> cells = new ArrayList<Cell>();
             cells.add(new Cell(
@@ -97,7 +99,8 @@ public class VolunterService {
                             Arrays.asList(
                                     new CellContent("text",
                                             null,null,false,
-                                            null,null, volunter.getEntry_date().toString(),
+                                            null,null,
+                                            formatter.format(volunter.getEntry_date()),
                                             null)
                             )
                     )

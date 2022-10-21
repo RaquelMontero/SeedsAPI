@@ -383,17 +383,13 @@ public class ContributorService {
     }
 
     public List<ComboSeed> findActiveSeeds(){
-       // List<ComboSeed> activecontr= this.contributorRepository.findActiveSeeds();
-        /*for (ComboSeed c: activecontr){
-            c.setLargename(c.getName() + ' ' + c.getLastname());
-        }*/
         List<Contributor> contributors = contributorRepository.findAll();
         contributors.removeIf(p -> !(p.getContributorState() == ContributorState.ACEPTADO.value));
         List<ComboSeed> activecontr= new ArrayList<>();
         for (Contributor contributor:contributors){
             activecontr.add(new ComboSeed(contributor.getContributor_id()
             ,contributor.getUser().getName(),contributor.getUser().getLastname(),
-                    contributor.getUser().getName()+contributor.getUser().getLastname(),
+                    contributor.getUser().getName()+ ' ' + contributor.getUser().getLastname(),
                     contributor.getUser().getEmail(),
                     contributor.getUser().getPhone(),
                     contributor.getUser().getDni()));

@@ -54,9 +54,9 @@ public class VolunterController {
         return voluntersDTOS;
     }
 
-    @GetMapping(path = {"/{volunter_id}"})
-    public VolunterDTO listarId(@PathVariable("volunter_id") Long volunter_id) {
-        VolunterDTO volunterDTO = new VolunterDTO(volunterService.findOneVolunter(volunter_id));
+    @GetMapping(path = {"/getVolunter"})
+    public VolunterDTO listarId(@RequestParam(required = true) Long id) {
+        VolunterDTO volunterDTO = new VolunterDTO(volunterService.findOneVolunter(id));
         return volunterDTO;
     }
 
