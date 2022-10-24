@@ -46,7 +46,7 @@ public class ContributorService {
                 constantAplicantHolder.getSendNewsType()
         ));
         ContributionConfig contributionConfig=contributionConfigService.saveConstantContributionConfig(constantContribution);
-        System.out.println("salvo la configuracion" + contributionConfig.getContributionType());
+        System.out.println("salvo la configuracion" + contributionConfig.getContribution_key());
         Contributor contributor = constantAplicantHolder.getContributor();
         contributor.setSend_date(new Date());
         contributor.setContributorState(new Long(ContributorState.PENDIENTE.value));
@@ -80,7 +80,7 @@ public class ContributorService {
                 uniqueAplicantHolder.getSendNewsType()
         ));
         ContributionConfig contributionConfig=contributionConfigService.saveUniqueContributionConfig(uniqueContribution);
-        System.out.println("salvo la configuracion " + contributionConfig.getContributionType());
+        System.out.println("salvo la configuracion " + contributionConfig.getContribution_key());
         Contributor contributor = uniqueAplicantHolder.getContributor();
         //Contributor contributor = new Contributor();
         contributor.setSend_date(new Date());
@@ -254,7 +254,7 @@ public class ContributorService {
                             Arrays.asList(
                                     new CellContent("text",
                                             null,null,false,
-                                            null,null, contributor.getContributionConfig().getContributionType().toString(),
+                                            null,null, contributor.getContributionConfig().getContribution_key().toString(),
                                             null)
                             )
                     )

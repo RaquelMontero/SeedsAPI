@@ -64,6 +64,7 @@ public class MyWebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/seeds/domainhelper/**").permitAll()
                 .antMatchers("/seeds/applicants/**").permitAll()
                 .antMatchers("/seeds/trackingassignment/**").permitAll()
+                .antMatchers("/seeds/contribution/**").permitAll()
                 .antMatchers("/sem/contribution/constant/**").permitAll()
                 .antMatchers("/sem/contribution/unique/**").permitAll()
                 .anyRequest().authenticated()

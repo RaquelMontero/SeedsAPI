@@ -5,7 +5,6 @@ import com.semillas.SemillasApi.Entities.Seeds.Contributor;
 import com.semillas.SemillasApi.Entities.SeedsTracking.TrackingAssignment;
 import com.semillas.SemillasApi.Enums.ColorCode;
 import com.semillas.SemillasApi.Enums.ContributionType;
-import com.semillas.SemillasApi.Enums.ContributorState;
 import com.semillas.SemillasApi.Repository.ContributorRepository;
 import com.semillas.SemillasApi.Repository.TrackingAssignmentRepository;
 import org.springframework.stereotype.Service;
@@ -99,10 +98,10 @@ public class TrackingAssignmentService {
                             Arrays.asList(
                                     new CellContent("chipContent",
                                             null,
-                                            contributor.getContributionConfig().getContributionType().equals(ContributionType.APORTE_CONSTANTE)
+                                            contributor.getContributionConfig().getContribution_key().equals(ContributionType.APORTE_CONSTANTE)
                                                     ? ColorCode.CONSTANT_CONTRIBUTION.value : ColorCode.UNIQUE_CONTRIBUTION.value, false,
                                             null,null,
-                                            contributor.getContributionConfig().getContributionType().toString(),
+                                            contributor.getContributionConfig().getContribution_key().toString(),
                                             null)
                             )
                     )
@@ -116,7 +115,9 @@ public class TrackingAssignmentService {
                                             "library_books", ColorCode.VIEW_TRACKING_SEEDS.value, true,
                                             "Donations","Seguimiento de aportes", null,
                                             new ArrayList<CellParam>(Arrays.asList(
-                                                    new CellParam("contributorId",contributor.getContributor_id().toString())
+                                                    new CellParam("contributorId",contributor.getContributor_id().toString()),
+                                                    new CellParam("trackingassignmentId",trackingAssignment.getTracking_assignment_id().toString()),
+                                                    new CellParam("contributionConfigId",contributor.getContributionConfig().getContribution_config_id().toString())
                                             ))
                                     ))
                             )

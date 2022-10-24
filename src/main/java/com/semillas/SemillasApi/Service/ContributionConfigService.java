@@ -7,9 +7,11 @@ import com.semillas.SemillasApi.Entities.Seeds.UniqueContribution;
 import com.semillas.SemillasApi.Enums.ContributionType;
 import com.semillas.SemillasApi.Repository.ConstantContributionRepository;
 import com.semillas.SemillasApi.Repository.ContributionConfigRepository;
+import com.semillas.SemillasApi.Repository.UniqueContributionRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 @Service
 public class ContributionConfigService {
@@ -18,13 +20,15 @@ public class ContributionConfigService {
     @Inject
     ConstantContributionRepository constantContributionRepository;
     @Inject
+    UniqueContributionRepository uniqueContributionRepository;
+    @Inject
     UniqueContributionService uniqueContributionService;
 
     public ContributionConfig saveUniqueContributionConfig(UniqueContribution uniqueContribution){
         UniqueContribution contribution=uniqueContributionService.saveUniqueContribution(uniqueContribution);
         ContributionConfig contributionConfig=new ContributionConfig();
         //contributionConfig.setContribution_id(contribution.getUnique_contribution_id());
-        contributionConfig.setContributionType(ContributionType.APORTE_UNICO);
+        contributionConfig.setContribution_key(ContributionType.APORTE_UNICO);
         return contributionConfigRepository.save(contributionConfig);
     }
 
@@ -33,7 +37,21 @@ public class ContributionConfigService {
 
         ContributionConfig contributionConfig=new ContributionConfig();
         //contributionConfig.setContribution_id(contribution.getConst_contribution_id());
-        contributionConfig.setContributionType(ContributionType.APORTE_CONSTANTE);
+        contributionConfig.setContribution_key(ContributionType.APORTE_CONSTANTE);
         return contributionConfigRepository.save(contributionConfig);
+    }
+
+    public ContributionConfig getContributionConfigById(Long id){
+        Optional<ContributionConfig> contributionConfig = contributionConfigRepository.findById(id);
+        if (contributionConfig.get().getContribution_key().equals(ContributionType.APORTE_CONSTANTE)){
+            Optional<ConstantContribution> constantContribution = constantContributionRepository.findById(
+                    contributionConfig.get().getContribution_id());
+        }
+        else{
+            Optional<UniqueContribution> constantContribution = uniqueContributionRepository.findById(
+                    contributionConfig.get().getContribution_id());
+        }
+        System.out.println("hkdjhas" + contributionConfig);
+        return contributionConfig.get();
     }
 }

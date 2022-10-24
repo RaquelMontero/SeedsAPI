@@ -20,15 +20,15 @@ public class ContributionConfig implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "contribution_key")
-    private ContributionType contributionType;
+    private ContributionType contribution_key;
 
     /*@Column(name = "contribution_id")
     private Long contribution_id;*/
 
-    @NotNull(message = "The contribution must not be null")
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contribution_id", referencedColumnName = "contribution_id")
-    private Contribution contribution;
+    @NotNull(message = "The contribution id must not be null")
+    //@OneToOne(cascade = CascadeType.ALL)
+    @Column(name = "contribution_id")
+    private Long contribution_id;
 
     /*@OneToOne(mappedBy = "contribution_config")
     private Contributor contributor;*/

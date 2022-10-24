@@ -47,7 +47,7 @@ public class RejectedApplicantDTO {
         send_date=applicant.getContributor().getSend_date();
         //contributorState =applicant.getContributor().getContributorState();
         contributionConfig_id=applicant.getContributor().getContributionConfig().getContribution_config_id();
-        contributionType= applicant.getContributor().getContributionConfig().getContributionType();
+        contributionType= applicant.getContributor().getContributionConfig().getContribution_key();
         //contribution_id=applicant.getContributor().getContributionConfig().getContribution_id();
         //reason=applicant.getReject_reason();
         //reject_date=applicant.getReject_date();

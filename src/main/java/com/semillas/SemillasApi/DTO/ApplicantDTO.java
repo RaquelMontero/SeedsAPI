@@ -43,7 +43,7 @@ public class ApplicantDTO {
         send_date= contributor.getSend_date();
         //contributorState = contributor.getContributorState();
         contributionConfig_id= contributor.getContributionConfig().getContribution_config_id();
-        contributionType= contributor.getContributionConfig().getContributionType();
+        contributionType= contributor.getContributionConfig().getContribution_key();
         //contribution_id= contributor.getContributionConfig().getContribution_id();
     }
 }

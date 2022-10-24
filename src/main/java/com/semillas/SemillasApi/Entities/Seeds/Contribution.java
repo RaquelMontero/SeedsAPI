@@ -38,12 +38,16 @@ public class Contribution {
     @OneToOne(mappedBy = "contribution")
     private UniqueContribution uniqueContribution;
 
+    @OneToOne(mappedBy = "contribution")
+    private ContributionConfig contributionConfig;
+
+    public Contribution() {
+    }
+
     public Contribution(Long contribution_amount, PaymentMethod paymentMethod, Boolean send_news, SendNewsType sendNewsType) {
         this.contribution_amount = contribution_amount;
         this.paymentMethod = paymentMethod;
         this.send_news = send_news;
         this.sendNewsType = sendNewsType;
-        this.constantContribution = constantContribution;
-        this.uniqueContribution = uniqueContribution;
     }
 }
