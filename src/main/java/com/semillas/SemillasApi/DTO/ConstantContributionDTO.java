@@ -16,7 +16,6 @@ public class ConstantContributionDTO {
     private PaymentMethod paymentMethod;
     private Boolean send_news;
     private SendNewsType sendNewsType;
-
     private Long const_contribution_id;
     private String start_month;
     private PaymentDate paymentDate;

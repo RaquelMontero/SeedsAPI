@@ -9,6 +9,7 @@ import lombok.Setter;
 public class ContributionConfigDTO {
     private Long id;
     private ContributionType contribution_key;
-
+    private Long contribution_id ;
+    private ContributionDTO contribution;
 
 }
