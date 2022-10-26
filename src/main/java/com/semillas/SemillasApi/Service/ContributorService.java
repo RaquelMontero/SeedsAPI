@@ -1,12 +1,12 @@
 package com.semillas.SemillasApi.Service;
 
 
-import com.semillas.SemillasApi.DTO.ContributorDTO;
+import com.semillas.SemillasApi.DTO.*;
 import com.semillas.SemillasApi.DTO.Format.*;
-import com.semillas.SemillasApi.DTO.ProcessSeedDTO;
 import com.semillas.SemillasApi.Entities.ResponseMessage;
 import com.semillas.SemillasApi.Entities.Seeds.*;
 import com.semillas.SemillasApi.Enums.ColorCode;
+import com.semillas.SemillasApi.Enums.ContributionType;
 import com.semillas.SemillasApi.Enums.ContributorState;
 import com.semillas.SemillasApi.Enums.PaymentDate;
 import com.semillas.SemillasApi.Repository.ContributorRepository;
@@ -15,10 +15,7 @@ import com.semillas.SemillasApi.Repository.RejectedApplicantRepository;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ContributorService {
@@ -46,10 +43,11 @@ public class ContributorService {
                 constantAplicantHolder.getSendNewsType()
         ));
         ContributionConfig contributionConfig=contributionConfigService.saveConstantContributionConfig(constantContribution);
-        System.out.println("salvo la configuracion" + contributionConfig.getContribution_key());
+        //System.out.println("salvo la configuracion" + contributionConfig.getContribution_key());
         Contributor contributor = constantAplicantHolder.getContributor();
         contributor.setSend_date(new Date());
-        contributor.setContributorState(new Long(ContributorState.PENDIENTE.value));
+        contributor.setRegister_date(new Date());
+        contributor.setContributorState(ContributorState.PENDIENTE.value);
         contributor.setContributionConfig(contributionConfig);
         ResponseMessage response;
         try {
@@ -84,7 +82,7 @@ public class ContributorService {
         Contributor contributor = uniqueAplicantHolder.getContributor();
         //Contributor contributor = new Contributor();
         contributor.setSend_date(new Date());
-        contributor.setContributorState(new Long(ContributorState.PENDIENTE.value));
+        contributor.setContributorState(ContributorState.PENDIENTE.value);
         contributor.setContributionConfig(contributionConfig);
         ResponseMessage response;
         try {
@@ -141,7 +139,7 @@ public class ContributorService {
 
     public ResponseMessage acceptApplicant(ProcessSeedDTO processSeedDTO) {
         Contributor contributor = contributorRepository.getById(processSeedDTO.getContributor_id());
-        contributor.setContributorState(new Long(processSeedDTO.getState()));
+        contributor.setContributorState(processSeedDTO.getState());
         ProcessedContributor processedContributor = new ProcessedContributor();
         processedContributor.setProcessed_date(new Date());
         processedContributor.setContributor(contributor);
@@ -185,7 +183,7 @@ public class ContributorService {
         List<ContributorDTO> contributorDTOS=new ArrayList<>();
         List<ProcessedContributor>contributors= processedContributorRepository.findAll();
         for (ProcessedContributor contributor:contributors){
-            ContributorDTO rejectedApplicantDTO=new ContributorDTO(contributor);
+            ContributorDTO rejectedApplicantDTO=new ContributorDTO(contributor.getContributor());
             contributorDTOS.add(rejectedApplicantDTO);
         }
         return contributorDTOS;
@@ -395,5 +393,16 @@ public class ContributorService {
                     contributor.getUser().getDni()));
         }
         return activecontr;
+    }
+
+    public ContributorDTO getSeedById(Long id){
+        Optional<Contributor> contributor = contributorRepository.findById(id);
+        ContributorDTO contributorDTO = new ContributorDTO(contributor.get());
+        ContributionConfigDTO contributionConfigDTO = new ContributionConfigDTO(contributor.get().getContributionConfig());
+        if (contributor.get().getContributionConfig().getContribution_key().equals(ContributionType.APORTE_CONSTANTE)){
+            ContributionDTO contributionDTO = new ContributionConstDTO();
+            contributionConfigDTO.setContribution(contributionDTO);
+        }
+        return contributorDTO;
     }
 }

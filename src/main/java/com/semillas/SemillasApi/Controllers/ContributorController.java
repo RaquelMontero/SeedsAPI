@@ -5,14 +5,15 @@ import com.semillas.SemillasApi.DTO.ContributorDTO;
 import com.semillas.SemillasApi.DTO.Format.ComboSeed;
 import com.semillas.SemillasApi.DTO.Format.Table;
 import com.semillas.SemillasApi.DTO.ProcessSeedDTO;
+import com.semillas.SemillasApi.DTO.VolunterDTO;
 import com.semillas.SemillasApi.Entities.Filters.ContributorFilter;
 import com.semillas.SemillasApi.Entities.ResponseMessage;
 import com.semillas.SemillasApi.Entities.Seeds.ConstantAplicantHolder;
+import com.semillas.SemillasApi.Entities.Seeds.Contributor;
 import com.semillas.SemillasApi.Entities.Seeds.UniqueAplicantHolder;
 import com.semillas.SemillasApi.Service.ContributorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.MediaType;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -33,7 +34,6 @@ public class ContributorController {
     public ResponseMessage createConstantApplicant(@RequestBody ConstantAplicantHolder constantAplicantHolder) {
         return contributorService.saveConstantContributtor(constantAplicantHolder);
     }
-
 
     @PostMapping(value = "/processSeed", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -66,5 +66,12 @@ public class ContributorController {
     public List<ComboSeed> findActiveSeeds(){
         return contributorService.findActiveSeeds();
     }
+
+    @GetMapping(path = {"/getSeedById"})
+    public ContributorDTO getSeedById(@RequestParam(required = true) Long id) {
+        ContributorDTO contributor = contributorService.getSeedById(id);
+        return contributor;
+    }
+
 }
 

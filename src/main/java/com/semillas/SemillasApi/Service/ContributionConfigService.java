@@ -34,9 +34,9 @@ public class ContributionConfigService {
 
     public ContributionConfig saveConstantContributionConfig(ConstantContribution constantContribution){
         ConstantContribution contribution=constantContributionRepository.save(constantContribution);
-
         ContributionConfig contributionConfig=new ContributionConfig();
-        //contributionConfig.setContribution_id(contribution.getConst_contribution_id());
+        contributionConfig.setConstantContribution(contribution);
+        contributionConfig.setIs_active(true);
         contributionConfig.setContribution_key(ContributionType.APORTE_CONSTANTE);
         return contributionConfigRepository.save(contributionConfig);
     }
@@ -45,11 +45,11 @@ public class ContributionConfigService {
         Optional<ContributionConfig> contributionConfig = contributionConfigRepository.findById(id);
         if (contributionConfig.get().getContribution_key().equals(ContributionType.APORTE_CONSTANTE)){
             Optional<ConstantContribution> constantContribution = constantContributionRepository.findById(
-                    contributionConfig.get().getContribution_id());
+                    contributionConfig.get().getConstantContribution().getConst_contribution_id());
         }
         else{
             Optional<UniqueContribution> constantContribution = uniqueContributionRepository.findById(
-                    contributionConfig.get().getContribution_id());
+                    contributionConfig.get().getUniqueContribution().getUnique_contribution_id());
         }
         System.out.println("hkdjhas" + contributionConfig);
         return contributionConfig.get();

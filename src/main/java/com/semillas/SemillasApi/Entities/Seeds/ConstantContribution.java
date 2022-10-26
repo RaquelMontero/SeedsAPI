@@ -38,4 +38,7 @@ public class ConstantContribution {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contribution_id", referencedColumnName = "contribution_id")
     private Contribution contribution;
+
+    /*@OneToOne(mappedBy = "constant_contribution")
+    private ContributionConfig contributionConfig;*/
 }

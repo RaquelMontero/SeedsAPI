@@ -39,7 +39,10 @@ public class Contributor implements Serializable {
 
     //@Enumerated(EnumType.STRING)
     @Column(name = "contributor_state")
-    private Long contributorState;
+    private int contributorState;
+
+    @Column(name = "register_date")
+    private Date register_date;
 
     @NotNull(message = "The person must not be null")
     @OneToOne(cascade = CascadeType.ALL)
@@ -47,7 +50,7 @@ public class Contributor implements Serializable {
     private User user;
 
     @NotNull(message = "The Config must not be null")
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contribution_config_id", referencedColumnName = "contribution_config_id")
     private ContributionConfig contributionConfig;
 

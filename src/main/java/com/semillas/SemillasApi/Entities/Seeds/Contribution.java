@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "contribution")
@@ -38,8 +39,8 @@ public class Contribution {
     @OneToOne(mappedBy = "contribution")
     private UniqueContribution uniqueContribution;
 
-    @OneToOne(mappedBy = "contribution")
-    private ContributionConfig contributionConfig;
+    /*@OneToOne(mappedBy = "contribution")
+    private ContributionConfig contributionConfig;*/
 
     public Contribution() {
     }

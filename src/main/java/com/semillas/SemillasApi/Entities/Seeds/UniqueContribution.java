@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name = "uniqueContribution")
+@Table(name = "unique_contribution")
 @Getter
 @Setter
 public class UniqueContribution {
@@ -23,4 +23,7 @@ public class UniqueContribution {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contribution_id", referencedColumnName = "contribution_id")
     private Contribution contribution;
+
+    /*@OneToOne(mappedBy = "unique_contribution")
+    private ContributionConfig contributionConfig;*/
 }
