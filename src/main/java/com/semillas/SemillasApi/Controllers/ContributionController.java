@@ -1,6 +1,7 @@
 package com.semillas.SemillasApi.Controllers;
 
 import com.semillas.SemillasApi.DTO.ConstantContributionDTO;
+import com.semillas.SemillasApi.DTO.ContributionConfigDTO;
 import com.semillas.SemillasApi.Entities.Seeds.ConstantContribution;
 import com.semillas.SemillasApi.Entities.Seeds.ContributionConfig;
 import com.semillas.SemillasApi.Service.ConstantContributionService;
@@ -19,8 +20,8 @@ public class ContributionController {
     ContributionConfigService contributionConfigService;
 
     @GetMapping(path = {"/getContributionConfigById"})
-    public ContributionConfig findContributionConfigById(@RequestParam(required = true) Long id){
-        ContributionConfig contributionConfig=contributionConfigService.getContributionConfigById(id);
+    public ContributionConfigDTO findContributionConfigById(@RequestParam(required = true) Long id){
+        ContributionConfigDTO contributionConfig=contributionConfigService.getContributionConfigById(id);
         return contributionConfig;
     }
 }

@@ -27,7 +27,7 @@ public class ContributorDTO implements Serializable {
     private Date send_date;
     private int contributorState;
     private ContributionConfigDTO contributionConfig;
-    private ContributionType contributionType;
+    private String contributionType;
     private Long contribution_id;
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date acepted_date;
@@ -45,7 +45,7 @@ public class ContributorDTO implements Serializable {
         city=applicant.getCity();
         send_date=applicant.getSend_date();
         contributorState =applicant.getContributorState();
-        contributionType= applicant.getContributionConfig().getContribution_key();
+        contributionType= applicant.getContributionConfig().getContribution_key().equals(ContributionType.APORTE_CONSTANTE) ? "Aporte Constante" : "Aporte Único";
         //contribution_id=applicant.getContributor().getContributionConfig().getContribution_id();
         //acepted_date=applicant.getAcepted_date();
     }

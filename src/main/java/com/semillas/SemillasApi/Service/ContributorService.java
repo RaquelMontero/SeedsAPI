@@ -9,6 +9,7 @@ import com.semillas.SemillasApi.Enums.ColorCode;
 import com.semillas.SemillasApi.Enums.ContributionType;
 import com.semillas.SemillasApi.Enums.ContributorState;
 import com.semillas.SemillasApi.Enums.PaymentDate;
+import com.semillas.SemillasApi.Repository.ConstantContributionRepository;
 import com.semillas.SemillasApi.Repository.ContributorRepository;
 import com.semillas.SemillasApi.Repository.ProcessedContributorRepository;
 import com.semillas.SemillasApi.Repository.RejectedApplicantRepository;
@@ -21,7 +22,6 @@ import java.util.*;
 public class ContributorService {
     @Inject
     ContributorRepository contributorRepository;
-
     @Inject
     RejectedApplicantRepository rejectedApplicantRepository;
     @Inject
@@ -30,6 +30,8 @@ public class ContributorService {
     ContributionConfigService contributionConfigService;
     @Inject
     VolunterService volunterService;
+    @Inject
+    ConstantContributionRepository constantContributionRepository;
 
     public ResponseMessage saveConstantContributtor(ConstantAplicantHolder constantAplicantHolder){
         ConstantContribution constantContribution = new ConstantContribution();
@@ -82,6 +84,7 @@ public class ContributorService {
         Contributor contributor = uniqueAplicantHolder.getContributor();
         //Contributor contributor = new Contributor();
         contributor.setSend_date(new Date());
+        contributor.setRegister_date(new Date());
         contributor.setContributorState(ContributorState.PENDIENTE.value);
         contributor.setContributionConfig(contributionConfig);
         ResponseMessage response;
@@ -147,6 +150,12 @@ public class ContributorService {
         processedContributor.setProcess_volunter(
                 volunterService.getVolunterById(processSeedDTO.getProcessVolunterId())
         );
+        if (contributor.getContributionConfig().getContribution_key().equals(ContributionType.APORTE_CONSTANTE)){
+            ConstantContribution constantContribution = contributor.getContributionConfig().getConstantContribution();
+            constantContribution.setContributionStartDate(processSeedDTO.getContributionStartDate());
+            constantContribution.setContributionEndDate(processSeedDTO.getContributionEndDate());
+            constantContributionRepository.save(constantContribution);
+        }
         processedContributorRepository.save(processedContributor);
         Contributor res = contributorRepository.save(contributor);
         ResponseMessage response;
@@ -400,9 +409,14 @@ public class ContributorService {
         ContributorDTO contributorDTO = new ContributorDTO(contributor.get());
         ContributionConfigDTO contributionConfigDTO = new ContributionConfigDTO(contributor.get().getContributionConfig());
         if (contributor.get().getContributionConfig().getContribution_key().equals(ContributionType.APORTE_CONSTANTE)){
-            ContributionDTO contributionDTO = new ContributionConstDTO();
+            ContributionDTO contributionDTO = new ContributionConstDTO(contributor.get().getContributionConfig().getConstantContribution());
             contributionConfigDTO.setContribution(contributionDTO);
         }
+        else {
+            ContributionDTO contributionDTO = new ContributionUniqDTO(contributor.get().getContributionConfig().getUniqueContribution());
+            contributionConfigDTO.setContribution(contributionDTO);
+        }
+        contributorDTO.setContributionConfig(contributionConfigDTO);
         return contributorDTO;
     }
 }

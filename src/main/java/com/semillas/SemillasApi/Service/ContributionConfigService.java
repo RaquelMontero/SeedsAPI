@@ -1,6 +1,10 @@
 package com.semillas.SemillasApi.Service;
 
 
+import com.semillas.SemillasApi.DTO.ContributionConfigDTO;
+import com.semillas.SemillasApi.DTO.ContributionConstDTO;
+import com.semillas.SemillasApi.DTO.ContributionDTO;
+import com.semillas.SemillasApi.DTO.ContributionUniqDTO;
 import com.semillas.SemillasApi.Entities.Seeds.ConstantContribution;
 import com.semillas.SemillasApi.Entities.Seeds.ContributionConfig;
 import com.semillas.SemillasApi.Entities.Seeds.UniqueContribution;
@@ -27,7 +31,8 @@ public class ContributionConfigService {
     public ContributionConfig saveUniqueContributionConfig(UniqueContribution uniqueContribution){
         UniqueContribution contribution=uniqueContributionService.saveUniqueContribution(uniqueContribution);
         ContributionConfig contributionConfig=new ContributionConfig();
-        //contributionConfig.setContribution_id(contribution.getUnique_contribution_id());
+        contributionConfig.setUniqueContribution(contribution);
+        contributionConfig.setIs_active(true);
         contributionConfig.setContribution_key(ContributionType.APORTE_UNICO);
         return contributionConfigRepository.save(contributionConfig);
     }
@@ -41,17 +46,21 @@ public class ContributionConfigService {
         return contributionConfigRepository.save(contributionConfig);
     }
 
-    public ContributionConfig getContributionConfigById(Long id){
+    public ContributionConfigDTO getContributionConfigById(Long id){
         Optional<ContributionConfig> contributionConfig = contributionConfigRepository.findById(id);
+
+        ContributionConfigDTO contributionConfigDTO = new ContributionConfigDTO(contributionConfig.get());
+
         if (contributionConfig.get().getContribution_key().equals(ContributionType.APORTE_CONSTANTE)){
-            Optional<ConstantContribution> constantContribution = constantContributionRepository.findById(
-                    contributionConfig.get().getConstantContribution().getConst_contribution_id());
+            ContributionDTO contributionDTO = new ContributionConstDTO(contributionConfig.get().getConstantContribution());
+            contributionConfigDTO.setContribution(contributionDTO);
+
         }
         else{
-            Optional<UniqueContribution> constantContribution = uniqueContributionRepository.findById(
-                    contributionConfig.get().getUniqueContribution().getUnique_contribution_id());
+            ContributionDTO contributionDTO = new ContributionUniqDTO(contributionConfig.get().getUniqueContribution());
+            contributionConfigDTO.setContribution(contributionDTO);
+
         }
-        System.out.println("hkdjhas" + contributionConfig);
-        return contributionConfig.get();
+        return contributionConfigDTO;
     }
 }

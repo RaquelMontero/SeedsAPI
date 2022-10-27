@@ -1,6 +1,7 @@
 package com.semillas.SemillasApi.DTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.semillas.SemillasApi.Enums.ContributionType;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
@@ -13,8 +14,8 @@ public class ProcessSeedDTO {
 
     private Long contributor_id;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date processed_date;
+    /*@JsonFormat(pattern="dd-MM-yyyy")
+    private Date processed_date;*/
 
     private String process_reason;
 
@@ -22,10 +23,18 @@ public class ProcessSeedDTO {
 
     private int state;
 
+    private ContributionType contributionType;
+
+    //@JsonFormat(pattern="dd-MM-yyyy")
+    private Date contributionStartDate;
+
+    //@JsonFormat(pattern="dd-MM-yyyy")
+    private Date contributionEndDate;
+
     public ProcessSeedDTO(Long processed_contributor_id, Long contributor_id, Date processed_date, String process_reason, Long processVolunterId, int state) {
         this.processed_contributor_id = processed_contributor_id;
         this.contributor_id = contributor_id;
-        this.processed_date = processed_date;
+        //this.processed_date = processed_date;
         this.process_reason = process_reason;
         this.processVolunterId = processVolunterId;
         this.state = state;
