@@ -4,6 +4,7 @@ package com.semillas.SemillasApi.Controllers;
 import com.semillas.SemillasApi.DTO.Format.ExitPost;
 import com.semillas.SemillasApi.DTO.Format.Table;
 import com.semillas.SemillasApi.DTO.VolunterDTO;
+import com.semillas.SemillasApi.Entities.Filters.VolunterFilter;
 import com.semillas.SemillasApi.Entities.Role;
 import com.semillas.SemillasApi.Entities.Volunter;
 import com.semillas.SemillasApi.Enums.Status;
@@ -34,6 +35,12 @@ public class VolunterController {
         volunterService.saveVolunter(volunter);
     }
 
+    @PutMapping(path = {"/updateVolunter"})
+    @ResponseStatus(HttpStatus.CREATED)
+    public void updateVolunter(@RequestBody Volunter volunter) {
+        volunterService.updateVolunter(volunter);
+    }
+
     @GetMapping(path = {"/all"})
     public Table findAllVolunters() {
         return volunterService.findAllVolunter();
@@ -49,8 +56,8 @@ public class VolunterController {
     }
 
     @GetMapping(path = {"/exitvolunters"})
-    public List<VolunterDTO> findAllExitvolunters() {
-        List<VolunterDTO> voluntersDTOS = new ArrayList<>();
+    public Table findAllExitvolunters(@RequestParam(required = false) VolunterFilter volunterFilter) {
+        Table voluntersDTOS = volunterService.findVoluntersByFilter(volunterFilter);
         return voluntersDTOS;
     }
 
@@ -60,13 +67,13 @@ public class VolunterController {
         return volunterDTO;
     }
 
-    @DeleteMapping(value = "/{id}")
+    @PostMapping(value = "/deleteVolunter")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteVolunterById(@PathVariable Long id) {
+    public void deleteVolunterById(@RequestBody Long id) {
         volunterService.deleteVolunter(id);
     }
 
-    @PostMapping(value = "/exit")
+    @PostMapping(value = "/exitVolunter")
     @ResponseStatus(HttpStatus.CREATED)
     public void exitVolunterById(@RequestBody ExitPost exitPost) {
         volunterService.exitVolunter(exitPost.getId());
@@ -76,12 +83,6 @@ public class VolunterController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void returnVolunterById(@PathVariable Long id) {
         volunterService.getVolunterById(id);
-    }
-
-    @PutMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateVolunterById(@Valid @PathVariable Long id, @RequestBody Volunter volunter) {
-        volunterService.updateVolunter(volunter);
     }
 
     @GetMapping(path = {"/trackingVolunters"})

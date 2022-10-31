@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface VolunterRepository extends JpaRepository<Volunter, Long> {
     //Optional<Volunter> findByPerson(User user);
+
 }

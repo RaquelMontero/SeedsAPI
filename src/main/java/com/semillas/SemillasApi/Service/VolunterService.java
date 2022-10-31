@@ -2,13 +2,11 @@ package com.semillas.SemillasApi.Service;
 
 
 import com.semillas.SemillasApi.DTO.Format.*;
-import com.semillas.SemillasApi.DTO.VolunterDTO;
+import com.semillas.SemillasApi.Entities.Filters.VolunterFilter;
 import com.semillas.SemillasApi.Entities.Role;
-import com.semillas.SemillasApi.Entities.Seeds.Contributor;
 import com.semillas.SemillasApi.Entities.User;
 import com.semillas.SemillasApi.Entities.Volunter;
 import com.semillas.SemillasApi.Enums.ColorCode;
-import com.semillas.SemillasApi.Enums.ContributorState;
 import com.semillas.SemillasApi.Enums.RolName;
 import com.semillas.SemillasApi.Enums.Status;
 import com.semillas.SemillasApi.Repository.UserRepository;
@@ -30,13 +28,21 @@ public class VolunterService {
 
     public Table findAllVolunter(){
         Table resultTable = this.getVoluntersInformat(volunterRepository.findAll(), false);
-        /*volunters.removeIf(p -> p.getStatus().equals(Status.INACTIVO));
-        for (Volunter volunter : volunters) {
-            VolunterDTO vacationDTO = new VolunterDTO(volunter);
-            voluntersDTOS.add(vacationDTO);
-        }*/
         return resultTable;
     }
+
+    public Table findVoluntersByFilter(VolunterFilter volunterFilter){
+        List<Volunter> volunters = volunterRepository.findAll();
+        if (volunterFilter.getStatus() != null){
+            volunters.removeIf(v -> v.getStatus()!= volunterFilter.getStatus());
+        }
+        if (volunterFilter.getRoleId() != null){
+            volunters.removeIf(v -> !this.gotTheRol(volunterFilter.getRoleId(),v.getRoles()));
+        }
+        Table resultTable = this.getVoluntersInformat(volunters, false);
+        return resultTable;
+    }
+
     public Table findAlltrackingVolunters(){
         List<Volunter> volunters =  volunterRepository.findAll();
         volunters.removeIf(v -> !this.gotTheRol(RolName.R_SEGUIMIENTOS,v.getRoles()));
@@ -100,7 +106,8 @@ public class VolunterService {
                                     new CellContent("text",
                                             null,null,false,
                                             null,null,
-                                            formatter.format(volunter.getEntry_date()),
+                                            volunter.getEntryDate() != null ?
+                                                    formatter.format(volunter.getEntryDate()) : " ",
                                             null)
                             )
                     )
@@ -183,14 +190,14 @@ public class VolunterService {
                     "group", ColorCode.VIEW_ASSIGNED_SEEDS.value, true,
                     "ViewAssignedSeeds","Ver semillas asignadas", null,
                     new ArrayList<CellParam>(Arrays.asList(
-                            new CellParam("volunterId",volunter.getVolunter_id().toString())
+                            new CellParam("volunterId",volunter.getVolunterId().toString())
                     ))
             ));
             contents.add(new CellContent("iconAccion",
                     "group_add", ColorCode.ASSIGN_SEED.value, true,
                     "AssignSeed","Asignar semilla", null,
                     new ArrayList<CellParam>(Arrays.asList(
-                            new CellParam("volunterId",volunter.getVolunter_id().toString())
+                            new CellParam("volunterId",volunter.getVolunterId().toString())
                     ))
             ));
         }
@@ -199,19 +206,19 @@ public class VolunterService {
                     "edit", ColorCode.EDIT.value, true,
                     "editVolunter","Editar", null,
                     new ArrayList<CellParam>(Arrays.asList(
-                            new CellParam("volunterId",volunter.getVolunter_id().toString())
+                            new CellParam("volunterId",volunter.getVolunterId().toString())
                     ))));
             contents.add(new CellContent("iconAccion",
                     "delete",ColorCode.DELETE.value, true,
                     "deleteVolunter","Eliminar", null,
                     new ArrayList<CellParam>(Arrays.asList(
-                            new CellParam("volunterId",volunter.getVolunter_id().toString())
+                            new CellParam("volunterId",volunter.getVolunterId().toString())
                     ))));
             contents.add(new CellContent("iconAccion",
                     "remove_red_eye",ColorCode.VIEW.value, true,
                     "seeVolunter","Ver Info", null,
                     new ArrayList<CellParam>(Arrays.asList(
-                            new CellParam("volunterId",volunter.getVolunter_id().toString())
+                            new CellParam("volunterId",volunter.getVolunterId().toString())
                     ))));
         }
 
@@ -224,10 +231,17 @@ public class VolunterService {
     }
 
     public Volunter saveVolunter (Volunter volunter){
-        System.out.println("llego service"+ volunter.getUser().getDni());
         userRepository.save(volunter.getUser());
         volunter.setStatus(Status.ACTIVO);
+        volunter.setEntryDate(new Date());
         return volunterRepository.save(volunter);
+    }
+
+    public Volunter updateVolunter (Volunter volunter){
+        userRepository.save(volunter.getUser());
+        Volunter saveVolunter = volunterRepository.getById(volunter.getVolunterId());
+        saveVolunter.setRoles(volunter.getRoles());
+        return volunterRepository.save(saveVolunter);
     }
 
     public void deleteVolunter(Long id){
@@ -237,7 +251,7 @@ public class VolunterService {
     public void exitVolunter(Long id){
         Volunter volunter=volunterRepository.getById(id);
         volunter.setStatus(Status.INACTIVO);
-        volunter.setExit_date(new Date());
+        volunter.setExitDate(new Date());
         volunterRepository.save(volunter);
     }
 
@@ -249,10 +263,6 @@ public class VolunterService {
         return volunter;
     }
 
-    public Volunter updateVolunter (Volunter volunter){
-        userRepository.save(volunter.getUser());
-        return volunterRepository.save(volunter);
-    }
 
     public Volunter findVolunterRoles(String email) {
         System.out.println("email"+email);

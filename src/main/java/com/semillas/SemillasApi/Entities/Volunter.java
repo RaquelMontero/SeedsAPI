@@ -22,13 +22,13 @@ public class Volunter implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "volunter_id")
-    private Long volunter_id;
+    private Long volunterId;
 
     @Column(name = "entry_date")
-    private Date entry_date;
+    private Date entryDate;
 
     @Column(name = "exit_date")
-    private Date exit_date;
+    private Date exitDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
