@@ -230,10 +230,16 @@ public class VolunterService {
         return volunterRepository.getById(volunter_id);
     }
 
-    public Volunter saveVolunter (Volunter volunter){
-        userRepository.save(volunter.getUser());
-        volunter.setStatus(Status.ACTIVO);
-        volunter.setEntryDate(new Date());
+    public Volunter saveVolunter (Volunter volunter) throws Exception{
+        Volunter duplicateVol = volunterRepository.findByUsername(volunter.getUsername());
+        if (duplicateVol != null){
+            throw new Exception("El username ya existe");
+        }
+       else {
+            userRepository.save(volunter.getUser());
+            volunter.setStatus(Status.ACTIVO);
+            volunter.setEntryDate(new Date());
+        }
         return volunterRepository.save(volunter);
     }
 

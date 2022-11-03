@@ -9,9 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "volunter")
@@ -30,6 +28,12 @@ public class Volunter implements Serializable {
     @Column(name = "exit_date")
     private Date exitDate;
 
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
@@ -39,9 +43,9 @@ public class Volunter implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "volunter")
-    private List<ExitMessage> exitMessages;
+    //@JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "volunter")
+    private Set<ExitMessage> exitMessages = new HashSet<>();
 
     //@JsonIgnore
     @ManyToMany

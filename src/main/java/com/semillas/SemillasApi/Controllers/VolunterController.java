@@ -30,7 +30,7 @@ public class VolunterController {
 
     @PostMapping(path = {"/create"})
     @ResponseStatus(HttpStatus.CREATED)
-    public void createVolunter(@RequestBody Volunter volunter) {
+    public void createVolunter(@RequestBody Volunter volunter)throws Exception {
         System.out.println("llego aqui" + volunter);
         volunterService.saveVolunter(volunter);
     }

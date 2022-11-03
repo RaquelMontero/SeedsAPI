@@ -1,6 +1,5 @@
 package com.semillas.SemillasApi.Security;
 
-import com.semillas.SemillasApi.Entities.Usuario;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

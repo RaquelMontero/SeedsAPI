@@ -1,8 +1,6 @@
 package com.semillas.SemillasApi.Service;
 
-import com.semillas.SemillasApi.Entities.Rol;
 import com.semillas.SemillasApi.Enums.RolNombre;
-import com.semillas.SemillasApi.Repository.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

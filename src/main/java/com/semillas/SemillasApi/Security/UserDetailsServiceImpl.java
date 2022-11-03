@@ -2,7 +2,6 @@ package com.semillas.SemillasApi.Security;
 
 
 import com.semillas.SemillasApi.Entities.User;
-import com.semillas.SemillasApi.Entities.Usuario;
 import com.semillas.SemillasApi.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

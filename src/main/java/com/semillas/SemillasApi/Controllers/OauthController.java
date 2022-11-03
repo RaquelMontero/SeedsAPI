@@ -1,16 +1,10 @@
 package com.semillas.SemillasApi.Controllers;
 
-import com.semillas.SemillasApi.DTO.TokenDto;
-import com.semillas.SemillasApi.Entities.Usuario;
 import com.semillas.SemillasApi.Security.jwt.JwtProvider;
 import com.semillas.SemillasApi.Service.RolService;
 import com.semillas.SemillasApi.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
