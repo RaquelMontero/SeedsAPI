@@ -1,80 +1,59 @@
 package com.semillas.SemillasApi.Controllers;
 
-import com.semillas.SemillasApi.Security.jwt.JwtProvider;
-import com.semillas.SemillasApi.Service.RolService;
-import com.semillas.SemillasApi.Service.UsuarioService;
+import com.semillas.SemillasApi.Entities.JwtRequest;
+import com.semillas.SemillasApi.Entities.JwtResponse;
+import com.semillas.SemillasApi.Entities.Volunter;
+import com.semillas.SemillasApi.Security.jwt.JwtUtil;
+import com.semillas.SemillasApi.Service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/oauth")
-@CrossOrigin
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class OauthController {
-
-    @Value("${google.clientId}")
-    String googleClientId;
-
-    @Value("${secretPsw}")
-    String secretPsw;
-
-/*    @Autowired
-    PasswordEncoder passwordEncoder;
-*/
-    /*@Autowired
-    AuthenticationManager authenticationManager;*/
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @Autowired
-    JwtProvider jwtProvider;
+    UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    UsuarioService usuarioService;
+    JwtUtil jwtUtil;
 
-    @Autowired
-    RolService rolService;
+    @PostMapping(path = {"/generate-token"})
+    public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest) throws Exception {
+        System.out.println("hkjhk"+ jwtRequest);
+        try {
+            authenticate(jwtRequest.getUsername(),jwtRequest.getPassword());
+        }catch (Exception exception) {
+            exception.printStackTrace();
+            throw new Exception("usuario no encontrado");
+        }
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(jwtRequest.getUsername());
+        String token = this.jwtUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token));
+    }
 
-
- /*
-    @PostMapping("/google")
-    public ResponseEntity<TokenDto> google(@RequestBody TokenDto tokenDto) throws IOException {
-       System.out.println("token" + tokenDto.getValue());
-        final NetHttpTransport transport = new NetHttpTransport();
-        final JacksonFactory jacksonFactory = JacksonFactory.getDefaultInstance();
-        GoogleIdTokenVerifier.Builder verifier =
-                new GoogleIdTokenVerifier.Builder(transport, jacksonFactory)
-                        .setAudience(Collections.singletonList(googleClientId));
-        final GoogleIdToken googleIdToken = GoogleIdToken.parse(verifier.getJsonFactory(), tokenDto.getValue());
-        final GoogleIdToken.Payload payload = googleIdToken.getPayload();
-        System.out.println("este es el payload " + payload.getEmail());
-        Usuario usuario = new Usuario();
-        if(usuarioService.existsEmail(payload.getEmail()))
-            usuario = usuarioService.getByEmail(payload.getEmail()).get();
-        else
-            usuario = saveUsuario(payload.getEmail());
-        TokenDto tokenRes = login(usuario);
-        return new ResponseEntity(tokenRes, HttpStatus.OK);
+    private void authenticate(String username, String password) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
+        }catch (DisabledException disabledException){
+            throw new Exception("USUARIO DESHABILITADO" + disabledException.getMessage());
+        }catch (BadCredentialsException badCredentialsException){
+            throw new Exception("credenciales invalidas" + badCredentialsException.getMessage());
+        }
     }
-*/
-/*
-    private TokenDto login(Usuario usuario){
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(usuario.getEmail(), secretPsw)
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtProvider.generateToken(authentication);
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setValue(jwt);
-        return tokenDto;
+    @GetMapping("/actual-usuario")
+    public Volunter getCurrentVolunter(Principal principal){
+        return (Volunter) this.userDetailsService.loadUserByUsername(principal.getName());
     }
-*/
-    /*@Bean
-    private Usuario saveUsuario(String email){
-        Usuario usuario = new Usuario(email, passwordEncoder.encode(secretPsw));
-        Rol rolUser = rolService.getByRolNombre(RolNombre.ROLE_USER).get();
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rolUser);
-        usuario.setRoles(roles);
-        return usuarioService.save(usuario);
-    }
-*/
 }
